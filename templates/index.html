@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ProjetoTeste — MVC Python</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/style.css">
+  <style>
+    .endpoint-item { border: 1px solid #e2e8f0; border-radius: 10px; margin-bottom: 8px; overflow: hidden; }
+    .endpoint-item .endpoint { border: none; border-radius: 0; margin: 0; padding: 12px 16px; }
+    .endpoint-actions { display: flex; gap: 8px; align-items: center; flex-shrink: 0; }
+    .btn-examples { padding: 5px 14px; border: 1px solid #cbd5e1; border-radius: 8px; background: #f8fafc; cursor: pointer; font-size: 12px; font-weight: 500; color: #475569; transition: all .15s; white-space: nowrap; }
+    .btn-examples:hover { background: #f1f5f9; color: #1e293b; }
+    .btn-examples.open { background: #1e293b; color: #fff; border-color: #1e293b; }
+    .examples-panel { padding: 0 16px 16px; background: #f8fafc; border-top: 1px solid #e2e8f0; }
+    .examples-panel .tabs { display: flex; gap: 8px; padding-top: 14px; margin-bottom: 0; }
+    .tab-btn { padding: 5px 14px; border: 1px solid #e2e8f0; border-bottom: none; border-radius: 8px 8px 0 0; background: #f1f5f9; cursor: pointer; font-size: 12px; font-weight: 500; color: #64748b; transition: all .15s; }
+    .tab-btn.active { background: #1e293b; color: #fff; border-color: #1e293b; }
+    .code-block { position: relative; background: #1e293b; border-radius: 0 8px 8px 8px; padding: 16px 20px; overflow-x: auto; }
+    .code-block pre { margin: 0; color: #e2e8f0; font-family: 'Courier New', monospace; font-size: 12.5px; line-height: 1.7; white-space: pre; }
+    .btn-copy { position: absolute; top: 10px; right: 12px; padding: 4px 12px; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.18); border-radius: 6px; color: #94a3b8; font-size: 11px; font-weight: 500; cursor: pointer; transition: all .15s; }
+    .btn-copy:hover { background: rgba(255,255,255,.16); color: #e2e8f0; }
+    .btn-copy.copied { background: rgba(74,222,128,.15); border-color: rgba(74,222,128,.35); color: #4ade80; }
+    .snippet { display: none; }
+    .snippet.active { display: block; }
+    .module-label { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #94a3b8; margin: 28px 0 10px; padding-bottom: 6px; border-bottom: 1px solid #e2e8f0; }
+    .module-label:first-child { margin-top: 0; }
+    .ep-desc { font-size: 13px; color: #475569; line-height: 1.65; margin: 12px 0 4px; padding: 10px 12px; background: #f1f5f9; border-left: 3px solid #cbd5e1; border-radius: 0 6px 6px 0; }
+    .ep-desc strong { color: #1e293b; font-weight: 600; }
+  </style>
+</head>
+<body>
+
+  <header class="hero">
+    <div class="hero-inner">
+      <div class="badge-top">Flask + Python</div>
+      <h1>ProjetoTeste</h1>
+      <p>API de Contabilidade — clique em "Ver exemplos" para ver como chamar cada endpoint.</p>
+    </div>
+  </header>
+
+  <main>
+
+    <section class="section">
+      <h2>Endpoints disponíveis</h2>
+
+      <!-- ── LANÇAMENTOS ── -->
+      <div class="module-label">Lançamentos Contábeis</div>
+
+      <div class="endpoint-item">
+        <div class="endpoint">
+          <span class="method get">GET</span>
+          <div class="endpoint-info">
+            <code>/lancamentos/</code>
+            <span class="endpoint-desc">Lista todos os lançamentos</span>
+          </div>
+          <div class="endpoint-actions">
+            <a href="/lancamentos/" class="btn-test" target="_blank">Testar</a>
+            <button class="btn-examples" data-target="ex-lanc-list">Ver exemplos ▾</button>
+          </div>
+        </div>
+        <div class="examples-panel" id="ex-lanc-list" hidden>
+          <div class="tabs">
+            <button class="tab-btn active" data-lang="curl">cURL</button>
+            <button class="tab-btn" data-lang="python">Python</button>
+            <button class="tab-btn" data-lang="js">JavaScript</button>
+          </div>
+          <div class="code-block">
+            <div class="snippet active" data-lang="curl"><pre>curl http://127.0.0.1:5000/lancamentos/</pre></div>
+            <div class="snippet" data-lang="python"><pre>import requests
+response = requests.get("http://127.0.0.1:5000/lancamentos/")
+print(response.json())</pre></div>
+            <div class="snippet" data-lang="js"><pre>const res = await fetch("http://127.0.0.1:5000/lancamentos/");
+console.log(await res.json());</pre></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="endpoint-item">
+        <div class="endpoint">
+          <span class="method get">GET</span>
+          <div class="endpoint-info">
+            <code>/lancamentos/&lt;id&gt;</code>
+            <span class="endpoint-desc">Retorna um lançamento pelo ID</span>
+          </div>
+          <div class="endpoint-actions">
+            <a href="/lancamentos/1" class="btn-test" target="_blank">Testar</a>
+            <button class="btn-examples" data-target="ex-lanc-id">Ver exemplos ▾</button>
+          </div>
+        </div>
+        <div class="examples-panel" id="ex-lanc-id" hidden>
+          <div class="tabs">
+            <button class="tab-btn active" data-lang="curl">cURL</button>
+            <button class="tab-btn" data-lang="python">Python</button>
+            <button class="tab-btn" data-lang="js">JavaScript</button>
+          </div>
+          <div class="code-block">
+            <div class="snippet active" data-lang="curl"><pre>curl http://127.0.0.1:5000/lancamentos/1</pre></div>
+            <div class="snippet" data-lang="python"><pre>import requests
+response = requests.get("http://127.0.0.1:5000/lancamentos/1")
+print(response.json())</pre></div>
+            <div class="snippet" data-lang="js"><pre>const res = await fetch("http://127.0.0.1:5000/lancamentos/1");
+console.log(await res.json());</pre></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="endpoint-item">
+        <div class="endpoint">
+          <span class="method post">POST</span>
+          <div class="endpoint-info">
+            <code>/lancamentos/</code>
+            <span class="endpoint-desc">Cria um novo lançamento</span>
+          </div>
+          <div class="endpoint-actions">
+            <button class="btn-examples" data-target="ex-lanc-post">Ver exemplos ▾</button>
+          </div>
+        </div>
+        <div class="examples-panel" id="ex-lanc-post" hidden>
+          <div class="tabs">
+            <button class="tab-btn active" data-lang="curl">cURL</button>
+            <button class="tab-btn" data-lang="python">Python</button>
+            <button class="tab-btn" data-lang="js">JavaScript</button>
+          </div>
+          <div class="code-block">
+            <div class="snippet active" data-lang="curl"><pre>curl -X POST http://127.0.0.1:5000/lancamentos/ \
+  -H "Content-Type: application/json" \
+  -d '{"descricao":"Pagamento de fornecedor","tipo":"debito","valor":1500.00,"data":"2026-05-15"}'</pre></div>
+            <div class="snippet" data-lang="python"><pre>import requests
+response = requests.post("http://127.0.0.1:5000/lancamentos/", json={
+    "descricao": "Pagamento de fornecedor",
+    "tipo": "debito",
+    "valor": 1500.00,
+    "data": "2026-05-15"
+})
+print(response.json())</pre></div>
+            <div class="snippet" data-lang="js"><pre>const res = await fetch("http://127.0.0.1:5000/lancamentos/", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ descricao: "Pagamento de fornecedor", tipo: "debito", valor: 1500.00, data: "2026-05-15" })
+});
+console.log(await res.json());</pre></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="endpoint-item">
+        <div class="endpoint">
+          <span class="method post">POST</span>
+          <div class="endpoint-info">
+            <code>/lancamentos/&lt;id&gt;/rateio</code>
+            <span class="endpoint-desc">Define o rateio por centro de custo (soma deve ser 100%)</span>
+          </div>
+          <div class="endpoint-actions">
+            <button class="btn-examples" data-target="ex-lanc-rateio">Ver exemplos ▾</button>
+          </div>
+        </div>
+        <div class="examples-panel" id="ex-lanc-rateio" hidden>
+          <div class="tabs">
+            <button class="tab-btn active" data-lang="curl">cURL</button>
+            <button class="tab-btn" data-lang="python">Python</button>
+            <button class="tab-btn" data-lang="js">JavaScript</button>
+          </div>
+          <div class="code-block">
+            <div class="snippet active" data-lang="curl"><pre>curl -X POST http://127.0.0.1:5000/lancamentos/1/rateio \
+  -H "Content-Type: application/json" \
+  -d '{"rateios":[{"centro_id":1,"percentual":60},{"centro_id":2,"percentual":40}]}'</pre></div>
+            <div class="snippet" data-lang="python"><pre>import requests
+response = requests.post("http://127.0.0.1:5000/lancamentos/1/rateio", json={
+    "rateios": [
+        {"centro_id": 1, "percentual": 60},
+        {"centro_id": 2, "percentual": 40}
+    ]
+})
+print(response.json())  # soma deve ser exatamente 100%</pre></div>
+            <div class="snippet" data-lang="js"><pre>const res = await fetch("http://127.0.0.1:5000/lancamentos/1/rateio", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ rateios: [{ centro_id: 1, percentual: 60 }, { centro_id: 2, percentual: 40 }] })
+});
+console.log(await res.json());</pre></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── PLANO DE CONTAS ── -->
+      <div class="module-label">Plano de Contas</div>
+
+      <div class="endpoint-item">
+        <div class="endpoint">
+          <span class="method get">GET</span>
+          <div class="endpoint-info">
+            <code>/contas/</code>
+            <span class="endpoint-desc">Lista o plano de contas completo</span>
+          </div>
+          <div class="endpoint-actions">
+            <a href="/contas/" class="btn-test" target="_blank">Testar</a>
+            <button class="btn-examples" data-target="ex-contas-list">Ver exemplos ▾</button>
+          </div>
+        </div>
+        <div class="examples-panel" id="ex-contas-list" hidden>
+          <div class="tabs">
+            <button class="tab-btn active" data-lang="curl">cURL</button>
+            <button class="tab-btn" data-lang="python">Python</button>
+            <button class="tab-btn" data-lang="js">JavaScript</button>
+          </div>
+          <div class="code-block">
+            <div class="snippet active" data-lang="curl"><pre>curl http://127.0.0.1:5000/contas/</pre></div>
+            <div class="snippet" data-lang="python"><pre>import requests
+response = requests.get("http://127.0.0.1:5000/contas/")
+print(response.json())</pre></div>
+            <div class="snippet" data-lang="js"><pre>const res = await fetch("http://127.0.0.1:5000/contas/");
+console.log(await res.json());</pre></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="endpoint-item">
+        <div class="endpoint">
+          <span class="method get">GET</span>
+          <div class="endpoint-info">
+            <code>/contas/&lt;id&gt;</code>
+            <span class="endpoint-desc">Detalha uma conta pelo ID</span>
+          </div>
+          <div class="endpoint-actions">
+            <a href="/contas/1" class="btn-test" target="_blank">Testar</a>
+            <button class="btn-examples" data-target="ex-contas-id">Ver exemplos ▾</button>
+          </div>
+        </div>
+        <div class="examples-panel" id="ex-contas-id" hidden>
+          <div class="tabs">
+            <button class="tab-btn active" data-lang="curl">cURL</button>
+            <button class="tab-btn" data-lang="python">Python</button>
+            <button class="tab-btn" data-lang="js">JavaScript</button>
+          </div>
+          <div class="code-block">
+            <div class="snippet active" data-lang="curl"><pre>curl http://127.0.0.1:5000/contas/1</pre></div>
+            <div class="snippet" data-lang="python"><pre>import requests
+response = requests.get("http://127.0.0.1:5000/contas/1")
+print(response.json())</pre></div>
+            <div class="snippet" data-lang="js"><pre>const res = await fetch("http://127.0.0.1:5000/contas/1");
+console.log(await res.json());</pre></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="endpoint-item">
+        <div class="endpoint">
+          <span class="method get">GET</span>
+          <div class="endpoint-info">
+            <code>/contas/balancete</code>
+            <span class="endpoint-desc">Saldos consolidados por conta</span>
+          </div>
+          <div class="endpoint-actions">
+            <a href="/contas/balancete" class="btn-test" target="_blank">Testar</a>
+            <button class="btn-examples" data-target="ex-contas-balancete">Ver exemplos ▾</button>
+          </div>
+        </div>
+        <div class="examples-panel" id="ex-contas-balancete" hidden>
+          <div class="tabs">
+            <button class="tab-btn active" data-lang="curl">cURL</button>
+            <button class="tab-btn" data-lang="python">Python</button>
+            <button class="tab-btn" data-lang="js">JavaScript</button>
+          </div>
+          <div class="code-block">
+            <div class="snippet active" data-lang="curl"><pre>curl http://127.0.0.1:5000/contas/balancete</pre></div>
+            <div class="snippet" data-lang="python"><pre>import requests
+response = requests.get("http://127.0.0.1:5000/contas/balancete")
+print(response.json())</pre></div>
+            <div class="snippet" data-lang="js"><pre>const res = await fetch("http://127.0.0.1:5000/contas/balancete");
+console.log(await res.json());</pre></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="endpoint-item">
+        <div class="endpoint">
+          <span class="method get">GET</span>
+          <div class="endpoint-info">
+            <code>/contas/&lt;id&gt;/lancamentos</code>
+            <span class="endpoint-desc">Movimentações de uma conta específica</span>
+          </div>
+          <div class="endpoint-actions">
+            <button class="btn-examples" data-target="ex-contas-lanc">Ver exemplos ▾</button>
+          </div>
+        </div>
+        <div class="examples-panel" id="ex-contas-lanc" hidden>
+          <div class="tabs">
+            <button class="tab-btn active" data-lang="curl">cURL</button>
+            <button class="tab-btn" data-lang="python">Python</button>
+            <button class="tab-btn" data-lang="js">JavaScript</button>
+          </div>
+          <div class="code-block">
+            <div class="snippet active" data-lang="curl"><pre>curl http://127.0.0.1:5000/contas/1/lancamentos</pre></div>
+            <div class="snippet" data-lang="python"><pre>import requests
+response = requests.get("http://127.0.0.1:5000/contas/1/lancamentos")
+print(response.json())</pre></div>
+            <div class="snippet" data-lang="js"><pre>const res = await fetch("http://127.0.0.1:5000/contas/1/lancamentos");
+console.log(await res.json());</pre></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="endpoint-item">
+        <div class="endpoint">
+          <span class="method post">POST</span>
+          <div class="endpoint-info">
+            <code>/contas/</code>
+            <span class="endpoint-desc">Cria uma nova conta no plano</span>
+          </div>
+          <div class="endpoint-actions">
+            <button class="btn-examples" data-target="ex-contas-post">Ver exemplos ▾</button>
+          </div>
+        </div>
+        <div class="examples-panel" id="ex-contas-post" hidden>
+          <div class="tabs">
+            <button class="tab-btn active" data-lang="curl">cURL</button>
+            <button class="tab-btn" data-lang="python">Python</button>
+            <button class="tab-btn" data-lang="js">JavaScript</button>
+          </div>
+          <div class="code-block">
+            <div class="snippet active" data-lang="curl"><pre>curl -X POST http://127.0.0.1:5000/contas/ \
+  -H "Content-Type: application/json" \
+  -d '{"codigo":"3.1.01","descricao":"Receita de Vendas","tipo":"receita","natureza":"credora","aceita_lancamento":true}'</pre></div>
+            <div class="snippet" data-lang="python"><pre>import requests
+response = requests.post("http://127.0.0.1:5000/contas/", json={
+    "codigo": "3.1.01",
+    "descricao": "Receita de Vendas",
+    "tipo": "receita",
+    "natureza": "credora",
+    "aceita_lancamento": True
+})
+print(response.json())</pre></div>
+            <div class="snippet" data-lang="js"><pre>const res = await fetch("http://127.0.0.1:5000/contas/", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ codigo: "3.1.01", descricao: "Receita de Vendas", tipo: "receita", natureza: "credora", aceita_lancamento: true })
+});
+console.log(await res.json());</pre></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="endpoint-item">
+        <div class="endpoint">
+          <span class="method delete">DELETE</span>
+          <div class="endpoint-info">
+            <code>/contas/&lt;id&gt;</code>
+            <span class="endpoint-desc">Exclui conta (bloqueado se tiver filhas ou lançamentos)</span>
+          </div>
+          <div class="endpoint-actions">
+            <button class="btn-examples" data-target="ex-contas-delete">Ver exemplos ▾</button>
+          </div>
+        </div>
+        <div class="examples-panel" id="ex-contas-delete" hidden>
+          <div class="tabs">
+            <button class="tab-btn active" data-lang="curl">cURL</button>
+            <button class="tab-btn" data-lang="python">Python</button>
+            <button class="tab-btn" data-lang="js">JavaScript</button>
+          </div>
+          <div class="code-block">
+            <div class="snippet active" data-lang="curl"><pre>curl -X DELETE http://127.0.0.1:5000/contas/1</pre></div>
+            <div class="snippet" data-lang="python"><pre>import requests
+response = requests.delete("http://127.0.0.1:5000/contas/1")
+print(response.json())  # bloqueado se tiver filhas ou lançamentos</pre></div>
+            <div class="snippet" data-lang="js"><pre>const res = await fetch("http://127.0.0.1:5000/contas/1", { method: "DELETE" });
+console.log(await res.json());</pre></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── CENTRO DE CUSTO ── -->
+      <div class="module-label">Centro de Custo</div>
+
+      <div class="endpoint-item">
+        <div class="endpoint">
+          <span class="method get">GET</span>
+          <div class="endpoint-info">
+            <code>/centros-de-custo/</code>
+            <span class="endpoint-desc">Lista todos os centros de custo</span>
+          </div>
+          <div class="endpoint-actions">
+            <a href="/centros-de-custo/" class="btn-test" target="_blank">Testar</a>
+            <button class="btn-examples" data-target="ex-cc-list">Ver exemplos ▾</button>
+          </div>
+        </div>
+        <div class="examples-panel" id="ex-cc-list" hidden>
+          <div class="tabs">
+            <button class="tab-btn active" data-lang="curl">cURL</button>
+            <button class="tab-btn" data-lang="python">Python</button>
+            <button class="tab-btn" data-lang="js">JavaScript</button>
+          </div>
+          <div class="code-block">
+            <div class="snippet active" data-lang="curl"><pre>curl http://127.0.0.1:5000/centros-de-custo/</pre></div>
+            <div class="snippet" data-lang="python"><pre>import requests
+response = requests.get("http://127.0.0.1:5000/centros-de-custo/")
+print(response.json())</pre></div>
+            <div class="snippet" data-lang="js"><pre>const res = await fetch("http://127.0.0.1:5000/centros-de-custo/");
+console.log(await res.json());</pre></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="endpoint-item">
+        <div class="endpoint">
+          <span class="method get">GET</span>
+          <div class="endpoint-info">
+            <code>/centros-de-custo/&lt;id&gt;/lancamentos</code>
+            <span class="endpoint-desc">Lançamentos vinculados ao centro</span>
+          </div>
+          <div class="endpoint-actions">
+            <button class="btn-examples" data-target="ex-cc-lanc">Ver exemplos ▾</button>
+          </div>
+        </div>
+        <div class="examples-panel" id="ex-cc-lanc" hidden>
+          <div class="tabs">
+            <button class="tab-btn active" data-lang="curl">cURL</button>
+            <button class="tab-btn" data-lang="python">Python</button>
+            <button class="tab-btn" data-lang="js">JavaScript</button>
+          </div>
+          <div class="code-block">
+            <div class="snippet active" data-lang="curl"><pre>curl http://127.0.0.1:5000/centros-de-custo/1/lancamentos</pre></div>
+            <div class="snippet" data-lang="python"><pre>import requests
+response = requests.get("http://127.0.0.1:5000/centros-de-custo/1/lancamentos")
+print(response.json())</pre></div>
+            <div class="snippet" data-lang="js"><pre>const res = await fetch("http://127.0.0.1:5000/centros-de-custo/1/lancamentos");
+console.log(await res.json());</pre></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="endpoint-item">
+        <div class="endpoint">
+          <span class="method post">POST</span>
+          <div class="endpoint-info">
+            <code>/centros-de-custo/</code>
+            <span class="endpoint-desc">Cria um novo centro de custo</span>
+          </div>
+          <div class="endpoint-actions">
+            <button class="btn-examples" data-target="ex-cc-post">Ver exemplos ▾</button>
+          </div>
+        </div>
+        <div class="examples-panel" id="ex-cc-post" hidden>
+          <div class="tabs">
+            <button class="tab-btn active" data-lang="curl">cURL</button>
+            <button class="tab-btn" data-lang="python">Python</button>
+            <button class="tab-btn" data-lang="js">JavaScript</button>
+          </div>
+          <div class="code-block">
+            <div class="snippet active" data-lang="curl"><pre>curl -X POST http://127.0.0.1:5000/centros-de-custo/ \
+  -H "Content-Type: application/json" \
+  -d '{"codigo":"CC-003","descricao":"Marketing"}'</pre></div>
+            <div class="snippet" data-lang="python"><pre>import requests
+response = requests.post("http://127.0.0.1:5000/centros-de-custo/", json={
+    "codigo": "CC-003",
+    "descricao": "Marketing"
+})
+print(response.json())</pre></div>
+            <div class="snippet" data-lang="js"><pre>const res = await fetch("http://127.0.0.1:5000/centros-de-custo/", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ codigo: "CC-003", descricao: "Marketing" })
+});
+console.log(await res.json());</pre></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="endpoint-item">
+        <div class="endpoint">
+          <span class="method patch">PATCH</span>
+          <div class="endpoint-info">
+            <code>/centros-de-custo/&lt;id&gt;/desativar</code>
+            <span class="endpoint-desc">Desativa o centro sem excluí-lo</span>
+          </div>
+          <div class="endpoint-actions">
+            <button class="btn-examples" data-target="ex-cc-patch">Ver exemplos ▾</button>
+          </div>
+        </div>
+        <div class="examples-panel" id="ex-cc-patch" hidden>
+          <div class="tabs">
+            <button class="tab-btn active" data-lang="curl">cURL</button>
+            <button class="tab-btn" data-lang="python">Python</button>
+            <button class="tab-btn" data-lang="js">JavaScript</button>
+          </div>
+          <div class="code-block">
+            <div class="snippet active" data-lang="curl"><pre>curl -X PATCH http://127.0.0.1:5000/centros-de-custo/1/desativar</pre></div>
+            <div class="snippet" data-lang="python"><pre>import requests
+response = requests.patch("http://127.0.0.1:5000/centros-de-custo/1/desativar")
+print(response.json())</pre></div>
+            <div class="snippet" data-lang="js"><pre>const res = await fetch("http://127.0.0.1:5000/centros-de-custo/1/desativar", { method: "PATCH" });
+console.log(await res.json());</pre></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── PERÍODO CONTÁBIL ── -->
+      <div class="module-label">Período Contábil</div>
+
+      <div class="endpoint-item">
+        <div class="endpoint">
+          <span class="method get">GET</span>
+          <div class="endpoint-info">
+            <code>/periodos/</code>
+            <span class="endpoint-desc">Lista todos os períodos contábeis</span>
+          </div>
+          <div class="endpoint-actions">
+            <a href="/periodos/" class="btn-test" target="_blank">Testar</a>
+            <button class="btn-examples" data-target="ex-per-list">Ver exemplos ▾</button>
+          </div>
+        </div>
+        <div class="examples-panel" id="ex-per-list" hidden>
+          <div class="tabs">
+            <button class="tab-btn active" data-lang="curl">cURL</button>
+            <button class="tab-btn" data-lang="python">Python</button>
+            <button class="tab-btn" data-lang="js">JavaScript</button>
+          </div>
+          <div class="code-block">
+            <div class="snippet active" data-lang="curl"><pre>curl http://127.0.0.1:5000/periodos/</pre></div>
+            <div class="snippet" data-lang="python"><pre>import requests
+response = requests.get("http://127.0.0.1:5000/periodos/")
+print(response.json())</pre></div>
+            <div class="snippet" data-lang="js"><pre>const res = await fetch("http://127.0.0.1:5000/periodos/");
+console.log(await res.json());</pre></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="endpoint-item">
+        <div class="endpoint">
+          <span class="method get">GET</span>
+          <div class="endpoint-info">
+            <code>/periodos/&lt;id&gt;</code>
+            <span class="endpoint-desc">Detalha um período pelo ID</span>
+          </div>
+          <div class="endpoint-actions">
+            <a href="/periodos/1" class="btn-test" target="_blank">Testar</a>
+            <button class="btn-examples" data-target="ex-per-id">Ver exemplos ▾</button>
+          </div>
+        </div>
+        <div class="examples-panel" id="ex-per-id" hidden>
+          <div class="tabs">
+            <button class="tab-btn active" data-lang="curl">cURL</button>
+            <button class="tab-btn" data-lang="python">Python</button>
+            <button class="tab-btn" data-lang="js">JavaScript</button>
+          </div>
+          <div class="code-block">
+            <div class="snippet active" data-lang="curl"><pre>curl http://127.0.0.1:5000/periodos/1</pre></div>
+            <div class="snippet" data-lang="python"><pre>import requests
+response = requests.get("http://127.0.0.1:5000/periodos/1")
+print(response.json())</pre></div>
+            <div class="snippet" data-lang="js"><pre>const res = await fetch("http://127.0.0.1:5000/periodos/1");
+console.log(await res.json());</pre></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="endpoint-item">
+        <div class="endpoint">
+          <span class="method get">GET</span>
+          <div class="endpoint-info">
+            <code>/periodos/&lt;id&gt;/lancamentos</code>
+            <span class="endpoint-desc">Lançamentos dentro do período</span>
+          </div>
+          <div class="endpoint-actions">
+            <button class="btn-examples" data-target="ex-per-lanc">Ver exemplos ▾</button>
+          </div>
+        </div>
+        <div class="examples-panel" id="ex-per-lanc" hidden>
+          <div class="tabs">
+            <button class="tab-btn active" data-lang="curl">cURL</button>
+            <button class="tab-btn" data-lang="python">Python</button>
+            <button class="tab-btn" data-lang="js">JavaScript</button>
+          </div>
+          <div class="code-block">
+            <div class="snippet active" data-lang="curl"><pre>curl http://127.0.0.1:5000/periodos/1/lancamentos</pre></div>
+            <div class="snippet" data-lang="python"><pre>import requests
+response = requests.get("http://127.0.0.1:5000/periodos/1/lancamentos")
+print(response.json())</pre></div>
+            <div class="snippet" data-lang="js"><pre>const res = await fetch("http://127.0.0.1:5000/periodos/1/lancamentos");
+console.log(await res.json());</pre></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="endpoint-item">
+        <div class="endpoint">
+          <span class="method get">GET</span>
+          <div class="endpoint-info">
+            <code>/periodos/&lt;id&gt;/balancete</code>
+            <span class="endpoint-desc">Totais de débito, crédito e saldo do período</span>
+          </div>
+          <div class="endpoint-actions">
+            <button class="btn-examples" data-target="ex-per-balancete">Ver exemplos ▾</button>
+          </div>
+        </div>
+        <div class="examples-panel" id="ex-per-balancete" hidden>
+          <div class="tabs">
+            <button class="tab-btn active" data-lang="curl">cURL</button>
+            <button class="tab-btn" data-lang="python">Python</button>
+            <button class="tab-btn" data-lang="js">JavaScript</button>
+          </div>
+          <div class="code-block">
+            <div class="snippet active" data-lang="curl"><pre>curl http://127.0.0.1:5000/periodos/1/balancete</pre></div>
+            <div class="snippet" data-lang="python"><pre>import requests
+response = requests.get("http://127.0.0.1:5000/periodos/1/balancete")
+print(response.json())  # retorna débito, crédito e saldo</pre></div>
+            <div class="snippet" data-lang="js"><pre>const res = await fetch("http://127.0.0.1:5000/periodos/1/balancete");
+console.log(await res.json());</pre></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="endpoint-item">
+        <div class="endpoint">
+          <span class="method post">POST</span>
+          <div class="endpoint-info">
+            <code>/periodos/</code>
+            <span class="endpoint-desc">Abre um novo período contábil</span>
+          </div>
+          <div class="endpoint-actions">
+            <button class="btn-examples" data-target="ex-per-post">Ver exemplos ▾</button>
+          </div>
+        </div>
+        <div class="examples-panel" id="ex-per-post" hidden>
+          <div class="tabs">
+            <button class="tab-btn active" data-lang="curl">cURL</button>
+            <button class="tab-btn" data-lang="python">Python</button>
+            <button class="tab-btn" data-lang="js">JavaScript</button>
+          </div>
+          <div class="code-block">
+            <div class="snippet active" data-lang="curl"><pre>curl -X POST http://127.0.0.1:5000/periodos/ \
+  -H "Content-Type: application/json" \
+  -d '{"descricao":"Junho/2026","data_inicio":"2026-06-01","data_fim":"2026-06-30"}'</pre></div>
+            <div class="snippet" data-lang="python"><pre>import requests
+response = requests.post("http://127.0.0.1:5000/periodos/", json={
+    "descricao": "Junho/2026",
+    "data_inicio": "2026-06-01",
+    "data_fim": "2026-06-30"
+})
+print(response.json())</pre></div>
+            <div class="snippet" data-lang="js"><pre>const res = await fetch("http://127.0.0.1:5000/periodos/", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ descricao: "Junho/2026", data_inicio: "2026-06-01", data_fim: "2026-06-30" })
+});
+console.log(await res.json());</pre></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="endpoint-item">
+        <div class="endpoint">
+          <span class="method post">POST</span>
+          <div class="endpoint-info">
+            <code>/periodos/&lt;id&gt;/fechar</code>
+            <span class="endpoint-desc">Encerra o período (operação irreversível)</span>
+          </div>
+          <div class="endpoint-actions">
+            <button class="btn-examples" data-target="ex-per-fechar">Ver exemplos ▾</button>
+          </div>
+        </div>
+        <div class="examples-panel" id="ex-per-fechar" hidden>
+          <div class="tabs">
+            <button class="tab-btn active" data-lang="curl">cURL</button>
+            <button class="tab-btn" data-lang="python">Python</button>
+            <button class="tab-btn" data-lang="js">JavaScript</button>
+          </div>
+          <div class="code-block">
+            <div class="snippet active" data-lang="curl"><pre>curl -X POST http://127.0.0.1:5000/periodos/1/fechar \
+  -H "Content-Type: application/json" \
+  -d '{"fechado_por":"joao.silva"}'</pre></div>
+            <div class="snippet" data-lang="python"><pre>import requests
+response = requests.post("http://127.0.0.1:5000/periodos/1/fechar", json={
+    "fechado_por": "joao.silva"
+})
+print(response.json())  # atenção: operação irreversível</pre></div>
+            <div class="snippet" data-lang="js"><pre>const res = await fetch("http://127.0.0.1:5000/periodos/1/fechar", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ fechado_por: "joao.silva" })
+});
+console.log(await res.json()); // atenção: operação irreversível</pre></div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <section class="section">
+      <h2>Estrutura do projeto</h2>
+      <div class="tree-card">
+        <pre>
+projetoTeste/
+├── app.py             ← Ponto de entrada
+├── config.py          ← Configurações
+├── models/            ← Dados e regras de negócio
+├── views/             ← Formatação das respostas
+├── controllers/       ← Rotas HTTP
+├── templates/         ← HTML
+├── static/            ← CSS e JS
+└── tests/             ← Testes automatizados</pre>
+      </div>
+    </section>
+
+    <section class="section cards-grid">
+      <div class="card">
+        <div class="card-icon">M</div>
+        <div>
+          <h3>Model</h3>
+          <p>Responsável pelos dados e regras de negócio. Isolado de rotas e apresentação.</p>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-icon">V</div>
+        <div>
+          <h3>View</h3>
+          <p>Formata e entrega as respostas — JSON para API ou HTML para o navegador.</p>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-icon">C</div>
+        <div>
+          <h3>Controller</h3>
+          <p>Recebe as requisições HTTP, aciona o model e delega a resposta à view.</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    Gerado pelo <strong>Cortex</strong> · ProjetoTeste MVC Python
+  </footer>
+
+  <script src="/static/js/main.js"></script>
+  <script>
+    // Accordion: expandir/recolher painel de exemplos
+    document.querySelectorAll('.btn-examples').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const panel = document.getElementById(btn.dataset.target);
+        const isOpen = !panel.hidden;
+        panel.hidden = isOpen;
+        btn.classList.toggle('open', !isOpen);
+        btn.textContent = isOpen ? 'Ver exemplos ▾' : 'Ocultar ▴';
+      });
+    });
+
+    // Descrições de cada endpoint — injetadas antes das abas de código
+    const epDescriptions = {
+      'ex-lanc-list':      'Retorna a lista completa de lançamentos cadastrados. Não requer parâmetros.',
+      'ex-lanc-id':        'Busca um lançamento específico pelo ID informado na URL. Retorna <strong>404</strong> se não encontrado.',
+      'ex-lanc-post':      '<strong>Campos obrigatórios:</strong> <code>descricao</code>, <code>tipo</code> (<em>debito</em> ou <em>credito</em>), <code>valor</code> (número) e <code>data</code> (formato <em>YYYY-MM-DD</em>).',
+      'ex-lanc-rateio':    'Distribui o valor do lançamento entre centros de custo. <strong>Obrigatório:</strong> array <code>rateios</code> com <code>centro_custo_id</code> e <code>percentual</code>. A soma dos percentuais deve ser exatamente <strong>100%</strong>.',
+      'ex-contas-list':    'Retorna todas as contas do plano contábil — incluindo contas sintéticas (agrupadores) e analíticas (que aceitam lançamentos).',
+      'ex-contas-id':      'Detalha uma conta específica pelo ID. Retorna <strong>404</strong> se não encontrada.',
+      'ex-contas-balancete': 'Retorna saldos consolidados de todas as contas. Base para geração do <strong>Balanço Patrimonial</strong> e <strong>DRE</strong>.',
+      'ex-contas-lanc':    'Lista todos os lançamentos associados à conta informada.',
+      'ex-contas-post':    '<strong>Campos obrigatórios:</strong> <code>codigo</code> (ex: <em>1.1.01</em>), <code>descricao</code>, <code>tipo</code> (<em>ativo, passivo, pl, receita</em> ou <em>despesa</em>), <code>natureza</code> (<em>devedora</em> ou <em>credora</em>). Use <code>conta_pai_id</code> para criar uma subconta.',
+      'ex-contas-delete':  'Remove uma conta do plano. Bloqueado se a conta tiver <strong>contas filhas</strong>.',
+      'ex-cc-list':        'Lista todos os centros de custo cadastrados, incluindo os desativados.',
+      'ex-cc-lanc':        'Retorna os lançamentos vinculados ao centro de custo via rateio.',
+      'ex-cc-post':        '<strong>Campos obrigatórios:</strong> <code>codigo</code> (ex: <em>CC-001</em>) e <code>descricao</code>.',
+      'ex-cc-patch':       'Desativa o centro de custo sem excluí-lo. Útil para preservar o histórico de lançamentos vinculados.',
+      'ex-per-list':       'Lista todos os períodos contábeis com seus respectivos status (<em>aberto</em> ou <em>fechado</em>).',
+      'ex-per-id':         'Detalha um período específico pelo ID.',
+      'ex-per-lanc':       'Retorna todos os lançamentos cuja <code>data</code> está dentro do intervalo do período.',
+      'ex-per-balancete':  'Calcula e retorna o total de <strong>débitos</strong>, <strong>créditos</strong> e o <strong>saldo líquido</strong> do período.',
+      'ex-per-post':       '<strong>Campos obrigatórios:</strong> <code>descricao</code> (ex: <em>Junho/2026</em>), <code>data_inicio</code> e <code>data_fim</code> (formato <em>YYYY-MM-DD</em>).',
+      'ex-per-fechar':     '<strong>Atenção: operação irreversível.</strong> Após o fechamento nenhum lançamento do período poderá ser criado ou alterado. Informe <code>fechado_por</code> para registrar o responsável.',
+    };
+
+    Object.entries(epDescriptions).forEach(([id, html]) => {
+      const panel = document.getElementById(id);
+      if (!panel) return;
+      const p = document.createElement('p');
+      p.className = 'ep-desc';
+      p.innerHTML = html;
+      panel.insertBefore(p, panel.querySelector('.tabs'));
+    });
+
+    // Botão de copiar — injetado automaticamente em cada bloco de código
+    document.querySelectorAll('.code-block').forEach(block => {
+      const btn = document.createElement('button');
+      btn.className = 'btn-copy';
+      btn.textContent = 'Copiar';
+      block.appendChild(btn);
+
+      btn.addEventListener('click', () => {
+        const pre = block.querySelector('.snippet.active pre');
+        if (!pre) return;
+        navigator.clipboard.writeText(pre.textContent.trim()).then(() => {
+          btn.textContent = 'Copiado ✓';
+          btn.classList.add('copied');
+          setTimeout(() => { btn.textContent = 'Copiar'; btn.classList.remove('copied'); }, 2000);
+        });
+      });
+    });
+
+    // Abas de linguagem dentro de cada painel
+    document.querySelectorAll('.examples-panel').forEach(panel => {
+      panel.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const lang = btn.dataset.lang;
+          const codeBlock = btn.closest('.examples-panel').querySelector('.code-block');
+
+          btn.closest('.tabs').querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+
+          codeBlock.querySelectorAll('.snippet').forEach(s => s.classList.remove('active'));
+          codeBlock.querySelector(`.snippet[data-lang="${lang}"]`).classList.add('active');
+        });
+      });
+    });
+  </script>
+</body>
+</html>
