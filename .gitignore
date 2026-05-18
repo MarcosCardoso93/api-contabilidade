@@ -11,4 +11,7 @@ env/
 .env
 .venv/
 
+# Banco de dados SQLite
+instance/banco.db
+
 
