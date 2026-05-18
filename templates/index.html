@@ -737,6 +737,12 @@ projetoTeste/
 
   <script src="/static/js/main.js"></script>
   <script>
+    // ─── URL base da API — altere aqui para refletir em todos os exemplos ───
+    const API_BASE = "https://api-contabilidade.onrender.com";
+    document.querySelectorAll('.snippet pre').forEach(pre => {
+      pre.textContent = pre.textContent.replace(/http:\/\/127\.0\.0\.1:5000/g, API_BASE);
+    });
+
     // Accordion: expandir/recolher painel de exemplos
     document.querySelectorAll('.btn-examples').forEach(btn => {
       btn.addEventListener('click', () => {
