@@ -71,7 +71,7 @@ def lancamentos_da_conta(conta_id: int):
     if conta is None:
         return view.render_erro("Conta não encontrada.", status=404)
     todos = lancamentos_model.listar_todos()
-    associados = [l.to_dict() for l in todos if l.tipo in ("debito", "credito")]
+    associados = [l.to_dict() for l in todos if l.conta_id == conta_id]
     return view.render_balancete(associados)
 
 
@@ -79,15 +79,19 @@ def lancamentos_da_conta(conta_id: int):
 def balancete():
     """GET /contas/balancete — retorna saldo consolidado por conta."""
     contas = model.listar_todas()
-    resultado = [
-        {
+    lancamentos = lancamentos_model.listar_todos()
+    resultado = []
+    for c in contas:
+        do_conta = [l for l in lancamentos if l.conta_id == c.id]
+        debitos = sum(l.valor for l in do_conta if l.tipo == "debito")
+        creditos = sum(l.valor for l in do_conta if l.tipo == "credito")
+        saldo = debitos - creditos if c.natureza == "devedora" else creditos - debitos
+        resultado.append({
             "id": c.id,
             "codigo": c.codigo,
             "descricao": c.descricao,
             "tipo": c.tipo,
             "natureza": c.natureza,
-            "saldo": 0.0,  # em produção: calcular a partir dos lançamentos no banco
-        }
-        for c in contas
-    ]
+            "saldo": round(saldo, 2),
+        })
     return view.render_balancete(resultado)

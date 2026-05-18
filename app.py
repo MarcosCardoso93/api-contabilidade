@@ -30,12 +30,6 @@ def _seed():
     from models.centros_custo_model import CentroCusto
     from models.periodos_model import PeriodoContabil
 
-    if not Lancamento.query.first():
-        db.session.add_all([
-            Lancamento(descricao="Venda de produtos", tipo="credito", valor=1000.00, data="2026-01-10"),
-            Lancamento(descricao="Aluguel da loja", tipo="debito", valor=2000.00, data="2026-01-15"),
-        ])
-
     if not Conta.query.first():
         # Nível 1 — contas raiz
         c_ativo = Conta(codigo="1", descricao="ATIVO", tipo="ativo", natureza="devedora", aceita_lancamento=False)
@@ -58,6 +52,16 @@ def _seed():
         # Nível 3
         db.session.add(Conta(codigo="1.1.01", descricao="Caixa", tipo="ativo", natureza="devedora",
                              aceita_lancamento=True, conta_pai_id=c_ativo_circ.id))
+        db.session.flush()
+
+        # Lançamentos vinculados às contas criadas acima
+        if not Lancamento.query.first():
+            db.session.add_all([
+                Lancamento(descricao="Venda de produtos", tipo="credito", valor=1000.00,
+                           data="2026-01-10", conta_id=c_rec_serv.id),
+                Lancamento(descricao="Aluguel da loja", tipo="debito", valor=2000.00,
+                           data="2026-01-15", conta_id=c_desp_op.id),
+            ])
 
     if not CentroCusto.query.first():
         db.session.add_all([

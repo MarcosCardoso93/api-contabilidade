@@ -34,6 +34,7 @@ def criar():
     tipo = dados.get("tipo", "").strip().lower()
     valor = dados.get("valor")
     data = dados.get("data", "").strip()
+    conta_id = dados.get("conta_id")
 
     # Validações
     if not descricao:
@@ -48,5 +49,13 @@ def criar():
     if not data:
         return view.render_erro("Campo 'data' é obrigatório (formato: YYYY-MM-DD).")
 
-    lancamento = model.criar(descricao=descricao, tipo=tipo, valor=float(valor), data=data)
+    if conta_id is not None:
+        from models import contas_model
+        conta = contas_model.buscar_por_id(conta_id)
+        if conta is None:
+            return view.render_erro(f"Conta {conta_id} não encontrada.")
+        if not conta.aceita_lancamento:
+            return view.render_erro(f"A conta '{conta.descricao}' não aceita lançamentos diretos.")
+
+    lancamento = model.criar(descricao=descricao, tipo=tipo, valor=float(valor), data=data, conta_id=conta_id)
     return view.render_lancamento(lancamento), 201
